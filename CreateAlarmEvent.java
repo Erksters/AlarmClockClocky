@@ -14,9 +14,9 @@ import edu.ksu.erksters.soundthealarm.CalendarDayStuffGlobalization.CalendarDays
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateAlarmEvent extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class CreateAlarmEvent extends AppCompatActivity implements AdapterView.OnItemSelectedListener , View.OnClickListener {
 
-    ArrayList<AlarmEvent> newAlarms;
+    ArrayList<AlarmEvent> newAlarms = new ArrayList<>();
     Spinner HourSpinner;
     Spinner MinuteSpinner;
     Spinner AMPMSpinner ;
@@ -32,21 +32,20 @@ public class CreateAlarmEvent extends AppCompatActivity implements AdapterView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_alarm_event);
 
-
-          HourSpinner = (Spinner) findViewById(R.id.HourSpinner);
-          MinuteSpinner = (Spinner) findViewById(R.id.MinuteSpinner);
-          AMPMSpinner = (Spinner) findViewById(R.id.AMPMSpinner);
-          Sunday = (CheckBox) findViewById(R.id.Sunday);
-          Monday = (CheckBox) findViewById(R.id.Monday);
-          Tuesday = (CheckBox) findViewById(R.id.Tuesday);
-          Wednesday = (CheckBox) findViewById(R.id.Wednesday);
-          Thursday = (CheckBox) findViewById(R.id.Thursday);
-          Friday = (CheckBox) findViewById(R.id.Friday);
-         Saturday = (CheckBox) findViewById(R.id.Saturday);
+        newAlarms = new ArrayList<>();
+        HourSpinner = (Spinner) findViewById(R.id.HourSpinner);
+        MinuteSpinner = (Spinner) findViewById(R.id.MinuteSpinner);
+        AMPMSpinner = (Spinner) findViewById(R.id.AMPMSpinner);
+        Sunday = (CheckBox) findViewById(R.id.Sunday);
+        Monday = (CheckBox) findViewById(R.id.Monday);
+        Tuesday = (CheckBox) findViewById(R.id.Tuesday);
+        Wednesday = (CheckBox) findViewById(R.id.Wednesday);
+        Thursday = (CheckBox) findViewById(R.id.Thursday);
+        Friday = (CheckBox) findViewById(R.id.Friday);
+        Saturday = (CheckBox) findViewById(R.id.Saturday);
 
 //
 //        Submission.setOnClickListener(this);
-        newAlarms  = new ArrayList<AlarmEvent>();
 
         // Spinner Drop down elements
         List<String> HoursCategories = new ArrayList<String>();
@@ -89,42 +88,41 @@ public class CreateAlarmEvent extends AppCompatActivity implements AdapterView.O
         AMPMSpinner.setAdapter(dataAdapter);
 
         Button Submission = (Button) findViewById(R.id.SubmitButton);
-        Submission.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view){
-                if(Sunday.isChecked()){
-                    newAlarms.add(new AlarmEvent(CalendarDays.Sunday , Integer.parseInt(HourSpinner.toString()), Integer.parseInt(MinuteSpinner.toString())));
-                }
-                if(Monday.isChecked()){
-                    newAlarms.add(new AlarmEvent(CalendarDays.Monday , Integer.parseInt(HourSpinner.toString()), Integer.parseInt(MinuteSpinner.toString())));
-                }
-                if(Tuesday.isChecked()){
-                    newAlarms.add(new AlarmEvent(CalendarDays.Tuesday , Integer.parseInt(HourSpinner.toString()), Integer.parseInt(MinuteSpinner.toString())));
-                }
-                if(Wednesday.isChecked()){
-                    newAlarms.add(new AlarmEvent(CalendarDays.Wednesday , Integer.parseInt(HourSpinner.toString()), Integer.parseInt(MinuteSpinner.toString())));
-                }
-                if(Thursday.isChecked()){
-                    newAlarms.add(new AlarmEvent(CalendarDays.Thursday , Integer.parseInt(HourSpinner.toString()), Integer.parseInt(MinuteSpinner.toString())));
-                }
-                if(Friday.isChecked()){
-                    newAlarms.add(new AlarmEvent(CalendarDays.Friday , Integer.parseInt(HourSpinner.toString()), Integer.parseInt(MinuteSpinner.toString())));
-                }
-                if(Saturday.isChecked()){
-                    newAlarms.add(new AlarmEvent(CalendarDays.Saturday , Integer.parseInt(HourSpinner.toString()), Integer.parseInt(MinuteSpinner.toString())));
-                }
+        Submission.setOnClickListener(this);
 
-                Intent intent=new Intent();
-                intent.putExtra("MESSAGE","REEEEEEEEEEEEEEE");
-                setResult(2,intent);
-                finish();//finishing activity
-
-            }
-        });
     }
 
+    public void onClick(View view){
+            if (Sunday.isChecked()) {
+                newAlarms.add(new AlarmEvent(CalendarDays.Sunday, Integer.parseInt(HourSpinner.getSelectedItem().toString()), Integer.parseInt(MinuteSpinner.getSelectedItem().toString())));
+            }
+            if (Monday.isChecked()) {
+                newAlarms.add(new AlarmEvent(CalendarDays.Monday, Integer.parseInt(HourSpinner.getSelectedItem().toString()), Integer.parseInt(MinuteSpinner.getSelectedItem().toString())));
+            }
+            if (Tuesday.isChecked()) {
+                newAlarms.add(new AlarmEvent(CalendarDays.Tuesday, Integer.parseInt(HourSpinner.getSelectedItem().toString()), Integer.parseInt(MinuteSpinner.getSelectedItem().toString())));
+            }
+            if (Wednesday.isChecked()) {
+                newAlarms.add(new AlarmEvent(CalendarDays.Wednesday, Integer.parseInt(HourSpinner.getSelectedItem().toString()), Integer.parseInt(MinuteSpinner.getSelectedItem().toString())));
+            }
+            if (Thursday.isChecked()) {
+                newAlarms.add(new AlarmEvent(CalendarDays.Thursday, Integer.parseInt(HourSpinner.getSelectedItem().toString()), Integer.parseInt(MinuteSpinner.getSelectedItem().toString())));
+            }
+            if (Friday.isChecked()) {
+                newAlarms.add(new AlarmEvent(CalendarDays.Friday, Integer.parseInt(HourSpinner.getSelectedItem().toString()), Integer.parseInt(MinuteSpinner.getSelectedItem().toString())));
+            }
+            if (Saturday.isChecked()) {
+                newAlarms.add(new AlarmEvent(CalendarDays.Saturday, Integer.parseInt(HourSpinner.getSelectedItem().toString()), Integer.parseInt(MinuteSpinner.getSelectedItem().toString())));
+            }
 
-@Override
+            Intent intent = new Intent();
+            intent.putExtra("data", newAlarms);
+            setResult(2, intent);
+            finish();//finishing activity
+        }
+
+
+        @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();

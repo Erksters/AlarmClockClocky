@@ -1,6 +1,7 @@
 package edu.ksu.erksters.soundthealarm;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.provider.AlarmClock;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,11 +10,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import edu.ksu.erksters.soundthealarm.CalendarDayStuffGlobalization.CalendarDays;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public Button CreateNewAlarm;
     ListView simpleList;
     ArrayList<AlarmEvent> Alarms;
+    ArrayAdapter<String> adapter;
 
 
     @Override
@@ -33,7 +35,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Alarms = new ArrayList<AlarmEvent>();
-//        AddAlarm(new AlarmEvent(CalendarDays.Monday, 3,3));
 
         AlarmEventSorter sorter = new AlarmEventSorter(Alarms);
         ArrayList newAlarms = sorter.getSorted();
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CreateNewAlarm.setOnClickListener(this);
 
         simpleList = (ListView)findViewById(R.id.ListOfAlarms);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_list_item_1, android.R.id.text1, GetDescriptions(newAlarms));
 
         simpleList.setAdapter(adapter);
@@ -53,8 +54,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view){
+        ArrayList<AlarmEvent> object = new ArrayList<AlarmEvent>();
         Intent go = new Intent (this, CreateAlarmEvent.class);
-        startActivityForResult(go , 2 );
+
+        go.putExtra("data", object);
+        startActivityForResult(go, 2);
     }
 
     // Call Back method  to get the Message form other Activity
@@ -62,13 +66,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
-        // check if the request code is same as what is passed  here it is 2
-        if(requestCode==2)
-        {
-            String message=data.getStringExtra("MESSAGE");
-            CreateNewAlarm.setText(message);
+        if (requestCode == 2 ) {
+//            try {
+                ArrayList<AlarmEvent> stuffretrieved = (ArrayList<AlarmEvent>) data.getSerializableExtra("data");
+                for (int x = 0; x < stuffretrieved.size(); x++) {
+                    AddAlarm(stuffretrieved.get(x));
+                }
+                adapter = new ArrayAdapter<String>(this,
+                        android.R.layout.simple_list_item_1, android.R.id.text1, GetDescriptions(Alarms));
+
+            simpleList.setAdapter(adapter);
+//            }
+//            catch (Exception e){
+//                String message = "Error Retrieving info from intent";
+//                CreateNewAlarm.setText(message);
         }
     }
+
 
 
     /**

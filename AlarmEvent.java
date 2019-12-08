@@ -1,11 +1,13 @@
 package edu.ksu.erksters.soundthealarm;
 
 import android.text.format.Time;
+
+import java.io.Serializable;
 import java.util.Calendar;
 import edu.ksu.erksters.soundthealarm.CalendarDayStuffGlobalization.CalendarDays;
 
 
-public class AlarmEvent implements Comparable<AlarmEvent>{
+public class AlarmEvent  implements Comparable<AlarmEvent> , Serializable {
     /**
      * Fields
      */
